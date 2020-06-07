@@ -26,6 +26,7 @@ interface Point {
   name: string;
   whatsapp: string;
   image: string;
+  image_url: string;
   email: string;
   city: string;
   uf: string;
@@ -39,7 +40,7 @@ export default function Detail() {
 
   const getPoint = useCallback(async () => {
     const params = route.params as Params;
-    const res = await fetch(`http://192.168.100.10:19000/points/${params.id}`);
+    const res = await fetch(`api/points/${params.id}`);
     setPoint(await res.json());
   }, []);
 
@@ -68,11 +69,18 @@ export default function Detail() {
             <TouchableOpacity onPress={() => navigation.goBack()}>
               <Icon name="arrow-left" size={20} color="#34CB79" />
             </TouchableOpacity>
-            <Image style={styles.pointImage} source={{ uri: point.image }} />
+
+            <Image
+              style={styles.pointImage}
+              source={{ uri: point.image_url }}
+            />
+
             <Text style={styles.pointName}>{point.name}</Text>
+
             <Text style={styles.pointItems}>
               {point.items.map((item) => item.title).join(", ")}
             </Text>
+
             <View style={styles.address}>
               <Text style={styles.addressTitle}>Endereço</Text>
               <Text style={styles.addressContent}>
@@ -80,11 +88,13 @@ export default function Detail() {
               </Text>
             </View>
           </View>
+
           <View style={styles.footer}>
             <RectButton style={styles.button} onPress={sendWhatsAppMessage}>
               <Fa name="whatsapp" size={20} color={"#fff"}></Fa>
               <Text style={styles.buttonText}>WhatsApp</Text>
             </RectButton>
+
             <RectButton style={styles.button} onPress={sendEmail}>
               <Icon name="mail" size={20} color={"#fff"}></Icon>
               <Text style={styles.buttonText}>E-mail</Text>
